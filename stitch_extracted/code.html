@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+<!-- STITCH_SHADER_START:ANIMATION_3 class="fixed inset-0 w-full h-full" -->
+<div class="fixed inset-0 w-full h-full" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_3" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_3');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+
+uniform vec2 u_resolution;
+uniform float u_time;
+uniform vec2 u_mouse;
+
+// Hash and noise utilities
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+}
+
+// Distance to segment
+float distSegment(vec2 p, vec2 a, vec2 b) {
+    vec2 pa = p - a, ba = b - a;
+    float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+    return length(pa - ba * h);
+}
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+    vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / u_resolution.y;
+
+    // 10-second loop timing
+    float cycle = 10.0;
+    float t = mod(u_time, cycle);
+    float loopProgress = t / cycle; // 0.0 to 1.0
+
+    // Ultra dark base tone (#030508 to #05080f)
+    vec3 color = vec3(0.015, 0.02, 0.035);
+
+    // Grid coordinates
+    vec2 gridUv = uv * vec2(40.0, 24.0);
+    vec2 gridFract = abs(fract(gridUv) - 0.5);
+    float gridLine = smoothstep(0.03, 0.0, min(gridFract.x, gridFract.y));
+
+    // Side and border masks: Top, Bottom, Left, Right ONLY. Center is completely dark!
+    float leftDist = uv.x;
+    float rightDist = 1.0 - uv.x;
+    float topDist = 1.0 - uv.y;
+    float bottomDist = uv.y;
+
+    float edgeDist = min(min(leftDist, rightDist), min(topDist, bottomDist));
+    
+    // Perimeter influence zone (outer 28% margins)
+    float borderMask = smoothstep(0.30, 0.03, edgeDist);
+    
+    // Center exclusion: explicitly ensure zero center brightness
+    float centerDist = length((uv - 0.5) * vec2(1.0, 1.2));
+    float centerHole = smoothstep(0.25, 0.55, centerDist);
+    borderMask *= centerHole;
+
+    // Very subtle background grid strictly at borders
+    color += vec3(0.008, 0.035, 0.06) * gridLine * borderMask * 0.45;
+
+    // Neon colors: Cyan/Ice Blue and Deep Electric Blue
+    vec3 neonCyan = vec3(0.0, 0.88, 1.0);
+    vec3 neonBlue = vec3(0.08, 0.35, 0.95);
+
+    // Procedural Circuit traces running along the four perimeters
+    // Left & Right circuits (vertical bias)
+    float traces = 0.0;
+    float pulses = 0.0;
+
+    // Left traces
+    if (uv.x < 0.32) {
+        float x1 = 0.06;
+        float x2 = 0.12;
+        float x3 = 0.18;
+        
+        // Wire lines with stepped angles
+        float d1 = abs(uv.x - x1);
+        float d2 = abs(uv.x - (x2 + sin(uv.y * 12.0) * 0.015));
+        float d3 = abs(uv.x - (x3 + step(0.5, uv.y) * 0.03));
+        
+        float traceGlow = 0.0015 / (d1 + 0.003) + 0.0012 / (d2 + 0.003) + 0.0008 / (d3 + 0.004);
+        traces += traceGlow;
+
+        // 10s travelling energy packet along Y
+        float packetY = mod(t * 0.35, 1.2) - 0.1;
+        float pulseY = smoothstep(0.12, 0.0, abs(uv.y - packetY));
+        pulses += pulseY * (0.004 / (d1 + 0.002) + 0.003 / (d2 + 0.002));
+    }
+
+    // Right traces
+    if (uv.x > 0.68) {
+        float rx1 = 0.94;
+        float rx2 = 0.88;
+        float rx3 = 0.82;
+
+        float d1 = abs(uv.x - rx1);
+        float d2 = abs(uv.x - (rx2 - sin(uv.y * 10.0 + 1.5) * 0.015));
+        float d3 = abs(uv.x - (rx3 - step(0.4, 1.0 - uv.y) * 0.025));
+
+        float traceGlow = 0.0015 / (d1 + 0.003) + 0.0012 / (d2 + 0.003) + 0.0008 / (d3 + 0.004);
+        traces += traceGlow;
+
+        // Counter-flow packet
+        float packetY = 1.1 - mod(t * 0.38 + 0.4, 1.2);
+        float pulseY = smoothstep(0.12, 0.0, abs(uv.y - packetY));
+        pulses += pulseY * (0.004 / (d1 + 0.002) + 0.003 / (d2 + 0.002));
+    }
+
+    // Top traces
+    if (uv.y > 0.70) {
+        float ty1 = 0.95;
+        float ty2 = 0.89;
+        float d1 = abs(uv.y - ty1);
+        float d2 = abs(uv.y - (ty2 + cos(uv.x * 14.0) * 0.012));
+
+        float traceGlow = 0.0014 / (d1 + 0.003) + 0.0010 / (d2 + 0.003);
+        traces += traceGlow;
+
+        float packetX = mod(t * 0.42 + 0.2, 1.3) - 0.15;
+        float pulseX = smoothstep(0.14, 0.0, abs(uv.x - packetX));
+        pulses += pulseX * (0.0035 / (d1 + 0.002));
+    }
+
+    // Bottom traces (floor perspective wire traces)
+    if (uv.y < 0.30) {
+        float by1 = 0.05;
+        float by2 = 0.12;
+        float d1 = abs(uv.y - by1);
+        float d2 = abs(uv.y - (by2 - cos(uv.x * 12.0) * 0.01));
+
+        float traceGlow = 0.0014 / (d1 + 0.003) + 0.0010 / (d2 + 0.003);
+        traces += traceGlow;
+
+        float packetX = 1.15 - mod(t * 0.36 + 0.6, 1.3);
+        float pulseX = smoothstep(0.14, 0.0, abs(uv.x - packetX));
+        pulses += pulseX * (0.0035 / (d1 + 0.002));
+    }
+
+    // Circuit nodes / junction blinks at perimeter corners
+    float cornerPulse = sin(t * 6.28318 / cycle) * 0.5 + 0.5; // Smooth 10s breathe
+    float cornerGlow = 0.0;
+    
+    // 4 corners
+    vec2 c1 = vec2(0.06, 0.95);
+    vec2 c2 = vec2(0.94, 0.95);
+    vec2 c3 = vec2(0.06, 0.05);
+    vec2 c4 = vec2(0.94, 0.05);
+
+    cornerGlow += 0.002 / (length(uv - c1) + 0.01);
+    cornerGlow += 0.002 / (length(uv - c2) + 0.01);
+    cornerGlow += 0.002 / (length(uv - c3) + 0.01);
+    cornerGlow += 0.002 / (length(uv - c4) + 0.01);
+
+    // Outer edge boundary neon strip
+    float outerPerimeter = smoothstep(0.015, 0.001, edgeDist);
+    float perimeterTravel = sin((edgeDist * 40.0) - t * 2.0) * 0.5 + 0.5;
+
+    // Composite illumination
+    vec3 circuitColor = mix(neonBlue, neonCyan, 0.65);
+    
+    // Base static circuit lines
+    color += circuitColor * traces * borderMask * 0.35;
+    
+    // Travelling 10s electric neon pulses
+    color += neonCyan * pulses * borderMask * 0.9;
+    
+    // Corner nodes
+    color += neonCyan * cornerGlow * borderMask * (0.4 + 0.6 * cornerPulse);
+
+    // Subtle edge perimeter line
+    color += mix(neonBlue, neonCyan, perimeterTravel) * outerPerimeter * 0.45;
+
+    // Hard vignette & center darkness guarantee
+    color *= centerHole;
+
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_3 -->
+</body>
+</html>

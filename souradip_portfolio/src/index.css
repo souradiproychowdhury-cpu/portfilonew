@@ -1,0 +1,190 @@
+@import 'tailwindcss';
+@plugin 'lightswind/plugin';
+@theme {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-fg);
+  --color-primary: var(--primary);
+  --color-primary-foreground: #ffffff;
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-fg);
+  --color-border: var(--border);
+}
+
+@layer base {
+  :root {
+    --bg: #eef4f8;
+    --fg: #0f172a;
+    --card: #ffffff;
+    --card-fg: #0f172a;
+    --primary: #8b5cf6;
+    --muted: #e2eaf3;
+    --muted-fg: #64748b;
+    --border: #d4dfe8;
+    --glass-bg: rgba(255, 255, 255, 0.82);
+    --glass-border: rgba(148, 163, 184, 0.22);
+  }
+
+  .dark {
+    --bg: #000000;
+    --fg: #f8fafc;
+    --card: #000000;
+    --card-fg: #f8fafc;
+    --primary: #8b5cf6;
+    --muted: #111111;
+    --muted-fg: #94a3b8;
+    --border: rgba(0, 210, 255, 0.40);
+    --glass-bg: #000000;
+    --glass-border: rgba(0, 210, 255, 0.40);
+  }
+
+  body {
+    background-color: transparent;
+    color: var(--color-foreground);
+    min-height: 100vh;
+  }
+
+  html {
+    background-color: #f1f5f9;
+  }
+
+  html.dark {
+    background-color: #000000;
+  }
+
+
+  /* View Transition API overrides for Lightswind ToggleTheme */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::selection {
+    background-color: rgba(139, 92, 246, 0.3);
+  }
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--fg) 0%, var(--muted-fg) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, #a78bfa 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Full dark black boxes with vibrant Blue Neon borders & highlight in dark mode ───── */
+.dark .bg-card,
+.dark [class*="bg-card"],
+.dark .glass-panel,
+.dark .rounded-lg.border,
+.dark .rounded-xl.border,
+.dark .rounded-2xl.border,
+.dark .rounded-3xl.border,
+.dark [class*="rounded-["][class*="border"] {
+  background-color: #000000 !important;
+  background: #000000 !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(0, 210, 255, 0.42) !important;
+  box-shadow:
+    0 0 0 1px rgba(0, 220, 255, 0.25),
+    0 0 16px rgba(0, 180, 255, 0.22),
+    0 0 35px rgba(0, 140, 255, 0.08),
+    0 6px 28px rgba(0, 0, 0, 0.85) !important;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.dark .bg-card:hover,
+.dark [class*="bg-card"]:hover,
+.dark .glass-panel:hover,
+.dark .rounded-lg.border:hover,
+.dark .rounded-xl.border:hover,
+.dark .rounded-2xl.border:hover,
+.dark .rounded-3xl.border:hover,
+.dark [class*="rounded-["][class*="border"]:hover {
+  border-color: rgba(0, 230, 255, 0.85) !important;
+  box-shadow:
+    0 0 0 1px rgba(0, 240, 255, 0.60),
+    0 0 25px rgba(0, 200, 255, 0.42),
+    0 0 50px rgba(0, 160, 255, 0.20),
+    0 8px 32px rgba(0, 0, 0, 0.95) !important;
+}
+
+/* Ensure small circular buttons or rounded-full tags keep compact shadows */
+.dark .rounded-full[class*="border"] {
+  box-shadow: none !important;
+  border-color: rgba(0, 210, 255, 0.30);
+}
+
+/* ── Cyber-grid image background (Light & Dark) ───────────────────────── */
+.cyber-grid-bg {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Light mode cyber grid image */
+.cyber-grid-bg__image {
+  position: absolute;
+  inset: 0;
+  background-image: url('/cyber-grid-light-bg.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.95;
+  transition: opacity 0.4s ease;
+}
+
+/* Dark mode cyber grid image */
+.dark .cyber-grid-bg__image {
+  background-image: url('/cyber-grid-bg.png');
+  opacity: 0.72;
+}
+
+/* Light mode overlay: soft translucent vignette so text and cards stay crisp and readable */
+.cyber-grid-bg__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%,   rgba(255, 255, 255, 0.35) 0%, transparent 65%),
+    radial-gradient(ellipse at 50% 100%, rgba(240, 245, 250, 0.45) 0%, transparent 60%),
+    linear-gradient(180deg,
+      rgba(248, 250, 252, 0.25) 0%,
+      rgba(255, 255, 255, 0.05) 35%,
+      rgba(255, 255, 255, 0.05) 65%,
+      rgba(241, 245, 249, 0.35) 100%
+    );
+  transition: background 0.4s ease;
+}
+
+/* Dark mode overlay: pure deep black overlay so dark mode text and cards stay crisp */
+.dark .cyber-grid-bg__overlay {
+  background:
+    radial-gradient(ellipse at 50% 0%,   rgba(0, 0, 0, 0.40) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.65) 0%, transparent 55%),
+    linear-gradient(180deg,
+      rgba(0, 0, 0, 0.50) 0%,
+      rgba(0, 0, 0, 0.15) 35%,
+      rgba(0, 0, 0, 0.15) 65%,
+      rgba(0, 0, 0, 0.60) 100%
+    );
+}
