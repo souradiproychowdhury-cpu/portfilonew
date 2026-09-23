@@ -77,6 +77,7 @@ export function SmoothCursor({
   disabled = false,
 }: SmoothCursorProps) {
   const [isVisible, setIsVisible] = useState(true);
+  const [isFinePointer, setIsFinePointer] = useState(false);
   const [isHoveringInteractive, setIsHoveringInteractive] = useState(false);
   const [trail, setTrail] = useState<{ x: number; y: number }[]>([]);
   const lastMousePos = useRef({ x: 0, y: 0 });
@@ -102,11 +103,14 @@ export function SmoothCursor({
   const cursorElement = cursor || defaultCursor;
 
   useEffect(() => {
-    if (disabled) return;
+    if (disabled || typeof window === "undefined") return;
 
-    // Only activate custom cursor on fine pointer devices (desktops)
-    const hasPointer = window.matchMedia("(pointer: fine)").matches;
-    if (!hasPointer) return;
+    const media = window.matchMedia("(pointer: fine)");
+    setIsFinePointer(media.matches);
+    const handleMedia = (e: MediaQueryListEvent) => setIsFinePointer(e.matches);
+    media.addEventListener("change", handleMedia);
+
+    if (!media.matches) return;
 
     const updateVelocity = (currentPos: { x: number; y: number }) => {
       const currentTime = Date.now();
@@ -254,7 +258,7 @@ export function SmoothCursor({
     isHoveringInteractive,
   ]);
 
-  if (disabled || !isVisible || isHoveringInteractive) return null;
+  if (disabled || !isFinePointer || !isVisible || isHoveringInteractive) return null;
 
   return (
     <>

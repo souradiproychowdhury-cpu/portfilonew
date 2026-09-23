@@ -12,77 +12,77 @@ export const ContactSection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8 }}
-        className="glass-panel p-8 md:p-12 rounded-[3rem] border border-foreground/10 relative overflow-hidden"
+        className="glass-panel p-6 sm:p-8 md:p-12 rounded-[2rem] sm:rounded-[3rem] border border-foreground/10 relative overflow-hidden"
       >
         {/* Background Gradients */}
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 blur-[100px] rounded-full pointer-events-none" />
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col md:flex-row gap-12 md:gap-24">
+        <div className="relative z-10 flex flex-col md:flex-row gap-10 md:gap-24">
           
           {/* Contact Info */}
           <div className="flex-1 space-y-8">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
                 Let's <span className="text-gradient-primary">Connect</span>
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
                 I'm currently open to new opportunities, collaborations, and internship roles. Whether you want to build something together or just want to say hi — I'll get back to you!
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <a 
                 href="mailto:souradiproychowdhury@gmail.com" 
-                className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors cursor-pointer group"
+                className="flex items-center gap-3 sm:gap-4 text-muted-foreground hover:text-primary transition-colors cursor-pointer group"
               >
-                <div className="w-12 h-12 rounded-full glass-panel flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Mail className="w-5 h-5" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 </div>
-                <span className="font-medium">souradiproychowdhury@gmail.com</span>
+                <span className="font-medium text-xs sm:text-sm md:text-base break-all">souradiproychowdhury@gmail.com</span>
               </a>
-              <div className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors cursor-pointer group">
-                <div className="w-12 h-12 rounded-full glass-panel flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <MapPin className="w-5 h-5" />
+              <div className="flex items-center gap-3 sm:gap-4 text-muted-foreground hover:text-primary transition-colors group">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 </div>
-                <span className="font-medium">Ashoknagar, West Bengal, India</span>
+                <span className="font-medium text-xs sm:text-sm md:text-base">Ashoknagar, West Bengal, India</span>
               </div>
             </div>
 
             {/* Social Links */}
-            <div className="space-y-4">
-              <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Find Me Online</p>
-              <div className="flex flex-col gap-3">
+            <div className="space-y-3 sm:space-y-4">
+              <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-muted-foreground">Find Me Online</p>
+              <div className="flex flex-col gap-2.5 sm:gap-3">
                 <a 
                   href="https://github.com/souradiproychowdhury-cpu" 
                   target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors group"
+                  className="flex items-center gap-2.5 sm:gap-3 text-muted-foreground hover:text-foreground transition-colors group"
                 >
-                  <Github className="w-5 h-5 group-hover:text-primary transition-colors" />
-                  <span className="font-medium">github.com/souradiproychowdhury-cpu</span>
+                  <Github className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:text-primary transition-colors" />
+                  <span className="font-medium text-xs sm:text-sm break-all">github.com/souradiproychowdhury-cpu</span>
                 </a>
                 <a 
                   href="https://linkedin.com/in/Souradip-Roy-Chowdhury" 
                   target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors group"
+                  className="flex items-center gap-2.5 sm:gap-3 text-muted-foreground hover:text-foreground transition-colors group"
                 >
-                  <Linkedin className="w-5 h-5 group-hover:text-primary transition-colors" />
-                  <span className="font-medium">linkedin.com/in/Souradip-Roy-Chowdhury</span>
+                  <Linkedin className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:text-primary transition-colors" />
+                  <span className="font-medium text-xs sm:text-sm break-all">linkedin.com/in/Souradip-Roy-Chowdhury</span>
                 </a>
                 <a 
                   href="https://portfolio1-n6kft2nd6-souradiproychowdhury-cpu.vercel.app" 
                   target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors group"
+                  className="flex items-center gap-2.5 sm:gap-3 text-muted-foreground hover:text-foreground transition-colors group"
                 >
-                  <Globe className="w-5 h-5 group-hover:text-primary transition-colors" />
-                  <span className="font-medium">Portfolio (Previous)</span>
+                  <Globe className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover:text-primary transition-colors" />
+                  <span className="font-medium text-xs sm:text-sm">Portfolio (Previous)</span>
                 </a>
               </div>
             </div>
           </div>
 
           {/* Form */}
-          <div className="flex-1 glass-panel p-8 rounded-[2rem] border border-foreground/10 relative">
+          <div className="flex-1 glass-panel p-6 sm:p-8 rounded-[1.75rem] sm:rounded-[2rem] border border-foreground/10 relative">
             <form 
               className="space-y-5" 
               onSubmit={(e) => {

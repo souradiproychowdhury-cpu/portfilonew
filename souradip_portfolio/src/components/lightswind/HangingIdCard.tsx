@@ -291,7 +291,7 @@ export const HangingIdCard = ({
   return (
     <div
       className={cn("flex flex-col items-center select-none", className)}
-      style={{ touchAction: "none" }}
+      style={{ touchAction: "pan-y" }}
     >
       {/* Ceiling anchor pin */}
       <div

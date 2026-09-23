@@ -71,26 +71,27 @@ export default function Header() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0, transition: { duration: 0.4 } }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4"
+          className="fixed top-3 sm:top-5 md:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-4"
         >
-          <div className="glass-panel w-full max-w-7xl rounded-[2rem] flex items-center justify-between px-6 py-4 shadow-xl">
+          <div className="glass-panel w-full max-w-7xl rounded-[1.75rem] sm:rounded-[2rem] flex items-center justify-between px-3.5 sm:px-6 py-2.5 sm:py-3.5 shadow-xl">
             {/* Logo */}
             <a
               onClick={() => handleScrollTo("#hero")}
-              className="cursor-pointer font-extrabold text-lg flex items-center gap-3 group select-none"
+              className="cursor-pointer font-extrabold text-lg flex items-center gap-2.5 sm:gap-3 group select-none shrink-0"
             >
-              <div className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 via-primary to-sky-400 p-[1px] shadow-lg group-hover:scale-105 transition-transform duration-300">
+              <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-purple-600 via-primary to-sky-400 p-[1px] shadow-lg group-hover:scale-105 transition-transform duration-300">
                 <div className="w-full h-full bg-background rounded-[11px] flex items-center justify-center">
-                  <span className="font-extrabold text-xs tracking-tighter bg-gradient-to-r from-purple-500 to-sky-400 bg-clip-text text-transparent">
+                  <span className="font-extrabold text-[11px] sm:text-xs tracking-tighter bg-gradient-to-r from-purple-500 to-sky-400 bg-clip-text text-transparent">
                     SR
                   </span>
                 </div>
               </div>
               <div className="flex flex-col text-left">
-                <span className="font-extrabold tracking-tight text-foreground text-sm leading-none group-hover:text-primary transition-colors">
-                  Souradip Roy Chowdhury
+                <span className="font-extrabold tracking-tight text-foreground text-xs sm:text-sm leading-none group-hover:text-primary transition-colors">
+                  <span className="hidden xs:inline">Souradip Roy Chowdhury</span>
+                  <span className="xs:hidden">Souradip R.</span>
                 </span>
-                <span className="text-[9px] font-bold text-muted-foreground tracking-widest uppercase mt-0.5">
+                <span className="text-[8px] sm:text-[9px] font-bold text-muted-foreground tracking-widest uppercase mt-0.5">
                   Portfolio
                 </span>
               </div>
@@ -116,7 +117,7 @@ export default function Header() {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <a
                 href="/Souradip_Roy_Chowdhury_Resume.pdf"
                 target="_blank"
@@ -129,9 +130,10 @@ export default function Header() {
               <ThemeToggle />
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="md:hidden text-foreground hover:text-primary transition-colors p-2"
+                className="md:hidden text-foreground hover:text-primary transition-colors p-1.5 rounded-lg border border-border/40 hover:bg-foreground/5"
+                aria-label="Open mobile menu"
               >
-                <Menu size={24} />
+                <Menu size={20} />
               </button>
             </div>
           </div>
@@ -146,43 +148,44 @@ export default function Header() {
                   exit: "closed",
                   variants: menuVariants,
                 } as MotionProps)}
-                className="fixed inset-0 z-40 bg-background/95 backdrop-blur-2xl md:hidden flex flex-col items-center justify-center"
+                className="fixed inset-0 z-50 bg-background/98 backdrop-blur-2xl md:hidden flex flex-col items-center justify-center p-6 overflow-y-auto"
               >
                 <motion.button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="absolute top-8 right-8 text-foreground"
+                  className="absolute top-6 right-6 text-foreground p-2 rounded-full border border-border/50 hover:bg-foreground/5"
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
                   transition={{ delay: 0.2 }}
+                  aria-label="Close mobile menu"
                 >
-                  <X size={32} />
+                  <X size={26} />
                 </motion.button>
 
                 <motion.ul
                   {...({ variants: listVariants } as MotionProps)}
-                  className="flex flex-col items-center justify-center h-full space-y-10"
+                  className="flex flex-col items-center justify-center w-full my-auto space-y-6 sm:space-y-8 py-8"
                 >
                   {navItems.map((item) => (
                     <motion.li key={item.name} {...({ variants: itemVariants } as MotionProps)}>
                       <a
                         onClick={() => handleScrollTo(item.href)}
-                        className="text-4xl font-bold text-muted-foreground hover:text-primary hover:tracking-wider transition-all cursor-pointer"
+                        className="text-2xl sm:text-3xl font-extrabold text-muted-foreground hover:text-primary hover:tracking-wide transition-all cursor-pointer block text-center"
                       >
                         {item.name}
                       </a>
                     </motion.li>
                   ))}
-                  <motion.li {...({ variants: itemVariants } as MotionProps)}>
+                  <motion.li {...({ variants: itemVariants } as MotionProps)} className="pt-2">
                     <a
                       href="/Souradip_Roy_Chowdhury_Resume.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-3xl font-extrabold text-primary flex items-center gap-2 hover:tracking-wider transition-all cursor-pointer"
+                      className="px-5 py-2.5 rounded-full text-base font-bold bg-primary text-primary-foreground flex items-center gap-2 hover:scale-105 transition-all shadow-lg shadow-primary/30"
                     >
                       <span>Resume (PDF)</span>
-                      <Download className="w-6 h-6" />
+                      <Download className="w-4 h-4" />
                     </a>
                   </motion.li>
                 </motion.ul>

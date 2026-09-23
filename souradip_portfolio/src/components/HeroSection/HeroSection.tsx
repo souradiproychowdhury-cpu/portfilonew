@@ -13,12 +13,12 @@ export const HeroSection = () => {
   const heroRef = useRef<HTMLElement>(null);
 
   return (
-    <section ref={heroRef} id="hero" className="relative min-h-[100vh] flex flex-col pt-12 md:pt-16 overflow-hidden bg-transparent">
+    <section ref={heroRef} id="hero" className="relative min-h-[100vh] flex flex-col pt-24 sm:pt-28 md:pt-32 overflow-hidden bg-transparent">
       {/* Background Dot Pattern with Radial Vignette Shade */}
       <DotPattern width={16} height={16} cx={1} cy={1} cr={1} glow />
       
       {/* Main Content Area */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex-1 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20 pb-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full flex-1 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16 lg:gap-20 pb-12">
         
         {/* Left Content */}
         <motion.div 
@@ -149,7 +149,7 @@ export const HeroSection = () => {
             accentColor="#8b5cf6"
             ropeLength={75}
             ropeColor="#27272a"
-            cardWidth="w-72 sm:w-80 md:w-84"
+            cardWidth="w-[276px] xs:w-72 sm:w-80 md:w-84 max-w-[calc(100vw-2.5rem)]"
           >
             <div className="flex flex-col h-full bg-card w-full">
               {/* Card Header Banner with Avatar */}
