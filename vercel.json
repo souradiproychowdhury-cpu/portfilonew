@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd souradip_portfolio && npm run build",
+  "outputDirectory": "souradip_portfolio/dist",
+  "installCommand": "cd souradip_portfolio && npm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
