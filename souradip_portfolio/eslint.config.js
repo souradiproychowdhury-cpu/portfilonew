@@ -27,6 +27,7 @@ export default tseslint.config([
       '@typescript-eslint/no-require-imports': 'off',
       'react-refresh/only-export-components': 'warn',
       'prefer-const': 'warn',
+      'no-empty': 'off',
     },
   },
 ])

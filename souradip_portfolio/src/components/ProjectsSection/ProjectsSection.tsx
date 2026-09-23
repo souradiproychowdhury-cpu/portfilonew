@@ -1,23 +1,36 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Github, ExternalLink, Sparkles } from "lucide-react";
+import { Github, ExternalLink, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const ProjectsSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const mobileTrackRef = useRef<HTMLDivElement>(null);
   const [scrollDistance, setScrollDistance] = useState(800);
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeMobileIdx, setActiveMobileIdx] = useState(0);
 
-  // Dynamically calculate the exact horizontal scroll distance needed so Chatify shows fully before unpinning
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Dynamically calculate the exact horizontal scroll distance needed for desktop
+  useEffect(() => {
+    if (isMobile) return;
+
     const updateDistance = () => {
       if (trackRef.current) {
         const track = trackRef.current;
         const lastCard = track.lastElementChild as HTMLElement;
         const windowWidth = window.innerWidth;
         if (lastCard) {
-          // Calculate exact shift needed so Chatify (last card) is fully revealed with clean right margin
           const cardRightEdge = lastCard.offsetLeft + lastCard.offsetWidth;
-          const rightMargin = windowWidth < 768 ? 20 : 48;
+          const rightMargin = 48;
           const dist = Math.max(0, cardRightEdge + rightMargin - windowWidth);
           setScrollDistance(dist);
         } else {
@@ -37,16 +50,28 @@ export const ProjectsSection = () => {
       clearTimeout(timer2);
       window.removeEventListener("resize", updateDistance);
     };
-  }, []);
+  }, [isMobile]);
 
-  // Tracks vertical scroll through the pinned container
+  // Tracks vertical scroll through the pinned container on desktop
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // Translates the projects track from left to right as the user scrolls downwards
   const x = useTransform(scrollYProgress, [0, 1], [0, -scrollDistance]);
+
+  const scrollToProject = (idx: number) => {
+    if (!mobileTrackRef.current) return;
+    const cards = mobileTrackRef.current.children;
+    if (cards[idx]) {
+      (cards[idx] as HTMLElement).scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+      setActiveMobileIdx(idx);
+    }
+  };
 
   const projects = [
     {
@@ -99,15 +124,181 @@ export const ProjectsSection = () => {
     },
   ];
 
+  // ── MOBILE LAYOUT (No sticky pinning trap, zero gap before My Journey) ──
+  if (isMobile) {
+    return (
+      <section id="projects" className="relative bg-transparent pt-12 pb-6 w-full">
+        {/* Mobile Header */}
+        <div className="px-5 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-wider uppercase mb-1.5 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Interactive Projects</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            Selected <span className="text-gradient-primary">Projects</span>
+          </h2>
+          <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+            Swipe left or tap arrows to explore all 4 projects.
+          </p>
+        </div>
+
+        {/* Mobile Horizontal Snap Track */}
+        <div
+          ref={mobileTrackRef}
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            const scrollLeft = el.scrollLeft;
+            const cardWidth = el.firstElementChild ? (el.firstElementChild as HTMLElement).offsetWidth + 16 : 280;
+            const idx = Math.round(scrollLeft / cardWidth);
+            setActiveMobileIdx(Math.min(Math.max(idx, 0), projects.length - 1));
+          }}
+          className="flex flex-row gap-4 overflow-x-auto snap-x snap-mandatory px-5 pb-3 pt-1 no-scrollbar touch-pan-x"
+          style={{ WebkitOverflowScrolling: "touch" }}
+        >
+          {projects.map((project) => (
+            <div
+              key={project.id}
+              className="w-[84vw] max-w-[340px] shrink-0 snap-center group flex flex-col rounded-3xl overflow-hidden border border-cyan-400/40 bg-black backdrop-blur-xl shadow-2xl"
+            >
+              {/* Image Section */}
+              <div className="relative overflow-hidden h-44 bg-black shrink-0">
+                <div className="absolute top-3 left-3 z-10">
+                  <span
+                    className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest backdrop-blur-md border text-white shadow-sm"
+                    style={{
+                      background: project.accentLight,
+                      borderColor: `${project.accent}55`,
+                    }}
+                  >
+                    {project.category}
+                  </span>
+                </div>
+                <div className="absolute top-3 right-3 z-10">
+                  <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-black/70 border border-white/20 text-white/80 backdrop-blur-md">
+                    0{project.id} / 04
+                  </span>
+                </div>
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover object-center"
+                />
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-[2px] opacity-80"
+                  style={{ background: `linear-gradient(90deg, transparent, ${project.accent}, transparent)` }}
+                />
+              </div>
+
+              {/* Content Section */}
+              <div className="flex flex-col flex-1 p-5 gap-3 bg-black justify-between">
+                <div>
+                  <h3 className="text-lg font-extrabold text-foreground tracking-tight mb-1 leading-snug">
+                    {project.title}
+                  </h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed line-clamp-3">
+                    {project.subtitle}
+                  </p>
+                </div>
+
+                {/* Tech Tags */}
+                <div className="flex flex-wrap gap-1 pt-0.5">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-0.5 rounded-full text-[10px] font-semibold border"
+                      style={{
+                        background: project.accentLight,
+                        borderColor: `${project.accent}44`,
+                        color: project.accent,
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="h-px bg-border/40 my-0.5" />
+
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2 pt-0.5">
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-md active:scale-95"
+                    style={{ background: project.accent }}
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Live Demo
+                  </a>
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border border-foreground/15 text-foreground hover:bg-foreground/5 transition-all active:scale-95"
+                  >
+                    <Github className="w-3.5 h-3.5" />
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile Swipe Pagination Dots & Arrow Controls */}
+        <div className="flex items-center justify-between px-5 pt-2">
+          <div className="flex items-center gap-1.5">
+            {projects.map((p, idx) => (
+              <button
+                key={p.id}
+                onClick={() => scrollToProject(idx)}
+                className={`transition-all duration-300 rounded-full ${
+                  activeMobileIdx === idx
+                    ? "w-6 h-2 bg-gradient-to-r from-cyan-400 to-primary shadow-sm"
+                    : "w-2 h-2 bg-foreground/20 hover:bg-foreground/40"
+                }`}
+                aria-label={`Go to project ${p.id}`}
+              />
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => scrollToProject(Math.max(0, activeMobileIdx - 1))}
+              disabled={activeMobileIdx === 0}
+              className="w-8 h-8 rounded-full border border-border/70 flex items-center justify-center text-foreground disabled:opacity-30 disabled:pointer-events-none hover:bg-foreground/5 active:scale-95"
+              aria-label="Previous project"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="text-xs font-mono font-bold text-muted-foreground">
+              0{activeMobileIdx + 1} / 04
+            </span>
+            <button
+              onClick={() => scrollToProject(Math.min(projects.length - 1, activeMobileIdx + 1))}
+              disabled={activeMobileIdx === projects.length - 1}
+              className="w-8 h-8 rounded-full border border-border/70 flex items-center justify-center text-foreground disabled:opacity-30 disabled:pointer-events-none hover:bg-foreground/5 active:scale-95"
+              aria-label="Next project"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ── DESKTOP PINNED HORIZONTAL SCROLL LAYOUT ──
   return (
     <section
       id="projects"
       ref={containerRef}
       style={{
-        // Height equals 1 screen + exact horizontal travel distance: zero dead gap before Journey
         height: `calc(100vh + ${scrollDistance}px)`,
       }}
-      className="relative bg-transparent"
+      className="relative bg-transparent hidden md:block"
     >
       {/* Pinned viewport frame: pins while scrolling down through all 4 projects */}
       <div className="sticky top-0 h-screen flex flex-col justify-start pt-14 md:pt-16 pb-4 overflow-hidden">

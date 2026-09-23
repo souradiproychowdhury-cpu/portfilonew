@@ -46,7 +46,7 @@ export const CareerTimeline = () => {
   ];
 
   return (
-    <div id="career" className="-mt-12 md:-mt-16 relative z-20 pt-2">
+    <div id="career" className="relative z-20 pt-4 md:-mt-16">
       <ScrollTimeline
         events={careerEvents}
         title="My Journey"
