@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface Particle {
   x: number;
@@ -75,6 +75,10 @@ export function ParticleTransition({ onComplete, duration = 3200 }: Props) {
     const FADE_START = duration * 0.6;
 
     function drawFrame() {
+      if (!canvas || !ctx) return;
+      const w = canvas.width;
+      const h = canvas.height;
+
       const elapsed = Date.now() - startTimeRef.current;
       const progress = Math.min(elapsed / duration, 1);
 
@@ -84,10 +88,10 @@ export function ParticleTransition({ onComplete, duration = 3200 }: Props) {
         globalAlpha = Math.max(0, globalAlpha);
       }
 
-      ctx!.clearRect(0, 0, canvas.width, canvas.height);
-      ctx!.globalAlpha = globalAlpha;
-      ctx!.fillStyle = "rgb(3, 4, 14)";
-      ctx!.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, w, h);
+      ctx.globalAlpha = globalAlpha;
+      ctx.fillStyle = "rgb(3, 4, 14)";
+      ctx.fillRect(0, 0, w, h);
 
       particles.forEach((p, i) => {
         p.life += 1;
@@ -95,13 +99,13 @@ export function ParticleTransition({ onComplete, duration = 3200 }: Props) {
         p.x += Math.cos(p.angle) * p.speed + p.vx * 0.2;
         p.y += Math.sin(p.angle) * p.speed + p.vy * 0.2;
 
-        if (p.x < -20) p.x = canvas.width + 20;
-        if (p.x > canvas.width + 20) p.x = -20;
-        if (p.y < -20) p.y = canvas.height + 20;
-        if (p.y > canvas.height + 20) p.y = -20;
+        if (p.x < -20) p.x = w + 20;
+        if (p.x > w + 20) p.x = -20;
+        if (p.y < -20) p.y = h + 20;
+        if (p.y > h + 20) p.y = -20;
 
         if (p.life > p.maxLife) {
-          particles[i] = createParticle(canvas.width, canvas.height);
+          particles[i] = createParticle(w, h);
           particles[i].life = 0;
           return;
         }
@@ -112,62 +116,62 @@ export function ParticleTransition({ onComplete, duration = 3200 }: Props) {
         p.trail.push({ x: p.x, y: p.y });
         if (p.trail.length > 20) p.trail.shift();
 
-        ctx!.save();
+        ctx.save();
 
         if (p.trail.length > 2) {
           for (let t = 1; t < p.trail.length; t++) {
             const tp = t / p.trail.length;
-            ctx!.globalAlpha = globalAlpha * tp * particleAlpha * 0.5;
-            ctx!.beginPath();
-            ctx!.moveTo(p.trail[t - 1].x, p.trail[t - 1].y);
-            ctx!.lineTo(p.trail[t].x, p.trail[t].y);
-            ctx!.strokeStyle = `hsl(${p.hue}, 90%, 65%)`;
-            ctx!.lineWidth = p.size * tp;
-            ctx!.lineCap = "round";
-            ctx!.stroke();
+            ctx.globalAlpha = globalAlpha * tp * particleAlpha * 0.5;
+            ctx.beginPath();
+            ctx.moveTo(p.trail[t - 1].x, p.trail[t - 1].y);
+            ctx.lineTo(p.trail[t].x, p.trail[t].y);
+            ctx.strokeStyle = `hsl(${p.hue}, 90%, 65%)`;
+            ctx.lineWidth = p.size * tp;
+            ctx.lineCap = "round";
+            ctx.stroke();
           }
         }
 
-        ctx!.globalAlpha = globalAlpha * particleAlpha;
+        ctx.globalAlpha = globalAlpha * particleAlpha;
 
         const glowR = p.size * 18;
-        const glow = ctx!.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowR);
+        const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowR);
         glow.addColorStop(0, `hsla(${p.hue}, 100%, 75%, 0.35)`);
         glow.addColorStop(0.35, `hsla(${p.hue}, 90%, 60%, 0.15)`);
         glow.addColorStop(1, `hsla(${p.hue}, 90%, 60%, 0)`);
-        ctx!.beginPath();
-        ctx!.arc(p.x, p.y, glowR, 0, Math.PI * 2);
-        ctx!.fillStyle = glow;
-        ctx!.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
 
         const coreR = p.size * 4;
-        const core = ctx!.createRadialGradient(p.x, p.y, 0, p.x, p.y, coreR);
+        const core = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, coreR);
         core.addColorStop(0, `hsla(${p.hue - 10}, 100%, 95%, 0.95)`);
         core.addColorStop(0.5, `hsla(${p.hue}, 100%, 70%, 0.6)`);
         core.addColorStop(1, `hsla(${p.hue}, 100%, 60%, 0)`);
-        ctx!.beginPath();
-        ctx!.arc(p.x, p.y, coreR, 0, Math.PI * 2);
-        ctx!.fillStyle = core;
-        ctx!.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, coreR, 0, Math.PI * 2);
+        ctx.fillStyle = core;
+        ctx.fill();
 
-        ctx!.restore();
+        ctx.restore();
       });
 
       const blobTime = elapsed * 0.0003;
       const blobs = [
-        { bx: canvas.width * (0.2 + Math.sin(blobTime) * 0.1), by: canvas.height * (0.7 + Math.cos(blobTime * 0.7) * 0.1), r: 140, hue: 210 },
-        { bx: canvas.width * (0.75 + Math.cos(blobTime * 0.9) * 0.08), by: canvas.height * (0.2 + Math.sin(blobTime * 1.1) * 0.08), r: 100, hue: 200 },
-        { bx: canvas.width * (0.5 + Math.sin(blobTime * 0.6) * 0.15), by: canvas.height * (0.5 + Math.cos(blobTime * 0.8) * 0.12), r: 80, hue: 220 },
+        { bx: w * (0.2 + Math.sin(blobTime) * 0.1), by: h * (0.7 + Math.cos(blobTime * 0.7) * 0.1), r: 140, hue: 210 },
+        { bx: w * (0.75 + Math.cos(blobTime * 0.9) * 0.08), by: h * (0.2 + Math.sin(blobTime * 1.1) * 0.08), r: 100, hue: 200 },
+        { bx: w * (0.5 + Math.sin(blobTime * 0.6) * 0.15), by: h * (0.5 + Math.cos(blobTime * 0.8) * 0.12), r: 80, hue: 220 },
       ];
       blobs.forEach(({ bx, by, r, hue }) => {
-        const bg = ctx!.createRadialGradient(bx, by, 0, bx, by, r);
+        const bg = ctx.createRadialGradient(bx, by, 0, bx, by, r);
         bg.addColorStop(0, `hsla(${hue}, 100%, 65%, ${0.05 * globalAlpha})`);
         bg.addColorStop(1, `hsla(${hue}, 100%, 60%, 0)`);
-        ctx!.globalAlpha = 1;
-        ctx!.beginPath();
-        ctx!.arc(bx, by, r, 0, Math.PI * 2);
-        ctx!.fillStyle = bg;
-        ctx!.fill();
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(bx, by, r, 0, Math.PI * 2);
+        ctx.fillStyle = bg;
+        ctx.fill();
       });
 
       if (progress < 1) {

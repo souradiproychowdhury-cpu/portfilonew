@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Transition, type TargetAndTransition } from "framer-motion";
 import {
   Atom,
   Server,
@@ -13,7 +13,6 @@ import {
   Globe,
   Palette,
   Sparkles,
-  Zap,
   ExternalLink,
 } from "lucide-react";
 import { BorderBeam } from "../lightswind/border-beam";
@@ -22,7 +21,21 @@ export default function ProfessionalProfile() {
   const getGoogleSearchUrl = (query: string) =>
     `https://www.google.com/search?q=${encodeURIComponent(query)}`;
 
-  const technicalSkills = [
+  interface TechSkill {
+    name: string;
+    domain: string;
+    searchQuery: string;
+    icon: typeof Atom;
+    color: string;
+    borderGlow: string;
+    iconBg: string;
+    signalColor: string;
+    accentGradient: string;
+    iconAnimation: TargetAndTransition;
+    iconTransition: Transition;
+  }
+
+  const technicalSkills: TechSkill[] = [
     {
       name: "JavaScript / React.js",
       domain: "Frontend & Modern UI",
@@ -237,7 +250,7 @@ export default function ProfessionalProfile() {
               <span className="text-[11px] text-muted-foreground/80 font-mono">11+ TOOLS</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {familiarTools.map((t, idx) => (
+              {familiarTools.map((t) => (
                 <motion.a
                   key={t}
                   href={getGoogleSearchUrl(`what is ${t}`)}

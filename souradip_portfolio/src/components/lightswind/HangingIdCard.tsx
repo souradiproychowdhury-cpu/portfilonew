@@ -24,6 +24,7 @@ export interface HangingIdCardProps {
   badgeId?: string;
   accentColor?: string;
   cardWidth?: string;
+  autoSwing?: boolean;
 }
 
 // ─── SVG Black Lanyard Rope & Metal Lock Clip ──────────────────────────────────
