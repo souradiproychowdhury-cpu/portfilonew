@@ -1,5 +1,5 @@
 import { ScrollTimeline } from "../lightswind/scroll-timeline";
-import { Code2, Trophy, Rocket, BookOpen, Briefcase } from "lucide-react";
+import { Code2, Trophy, Rocket, BookOpen, Briefcase, ExternalLink } from "lucide-react";
 
 export const CareerTimeline = () => {
   const careerEvents = [
@@ -15,8 +15,42 @@ export const CareerTimeline = () => {
       year: "2025 — Present",
       title: "AI Project Streak: Mochi, GestureAI & VitaSense",
       subtitle: "Personal Projects",
-      description:
-        "Developed and deployed three major AI-powered projects: Mochi (an animated AI virtual companion with voice interaction and Claude AI), GestureAI/MotionMind (3D gesture control meets AI Q&A), and VitaSense (full-stack healthcare platform with Groq/Llama AI). Each project ships with live deployments and public GitHub repos.",
+      description: (
+        <div>
+          <p className="leading-relaxed">
+            Developed and deployed three major AI-powered projects: Mochi (an animated AI virtual companion with voice interaction and Claude AI), GestureAI/MotionMind (3D gesture control meets AI Q&A), and VitaSense (full-stack healthcare platform with Groq/Llama AI). Each project ships with live deployments and public GitHub repos.
+          </p>
+          <div className="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-border/30">
+            <a
+              href="https://souradiproychowdhury-cpu.github.io/mochi/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-purple-300 bg-purple-950/70 border border-purple-500/40 hover:bg-purple-600 hover:text-white transition-all shadow-sm"
+            >
+              <span>Mochi Live</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+            <a
+              href="https://souradiproychowdhury-cpu.github.io/MotionMind./"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-cyan-300 bg-cyan-950/70 border border-cyan-500/40 hover:bg-cyan-600 hover:text-white transition-all shadow-sm"
+            >
+              <span>GestureAI Live</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+            <a
+              href="https://vita-sense-mxtycln7a-souradiproychowdhury-cpu.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-emerald-300 bg-emerald-950/70 border border-emerald-500/40 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+            >
+              <span>VitaSense Live</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
+      ),
       icon: <Rocket className="h-4 w-4 mr-2 text-primary" />,
     },
     {
@@ -31,8 +65,24 @@ export const CareerTimeline = () => {
       year: "2025",
       title: "Chatify — Real-Time Messaging UI",
       subtitle: "Personal Project",
-      description:
-        "Built a modern real-time messaging interface from scratch using pure HTML, CSS and JavaScript — no frameworks. Supports text communication, image sharing, voice messages with a custom player, and emoji reactions. Live at chatify-px8p.onrender.com.",
+      description: (
+        <div>
+          <p className="leading-relaxed">
+            Built a modern real-time messaging interface from scratch using pure HTML, CSS and JavaScript — no frameworks. Supports text communication, image sharing, voice messages with a custom player, and emoji reactions.
+          </p>
+          <div className="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-border/30">
+            <a
+              href="https://chatify-px8p.onrender.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-sky-300 bg-sky-950/70 border border-sky-500/40 hover:bg-sky-600 hover:text-white transition-all shadow-sm"
+            >
+              <span>Chatify Live Deployment</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
+      ),
       icon: <Code2 className="h-4 w-4 mr-2 text-primary" />,
     },
     {

@@ -138,7 +138,7 @@ export const ProjectsSection = () => {
             Selected <span className="text-gradient-primary">Projects</span>
           </h2>
           <p className="text-muted-foreground text-xs sm:text-sm mt-1">
-            Swipe left or tap arrows to explore all 4 projects.
+            Swipe left or tap arrows to explore all 4 live projects.
           </p>
         </div>
 
@@ -158,11 +158,11 @@ export const ProjectsSection = () => {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="w-[84vw] max-w-[340px] shrink-0 snap-center group flex flex-col rounded-3xl overflow-hidden border border-cyan-400/40 bg-black backdrop-blur-xl shadow-2xl"
+              className="w-[85vw] max-w-[340px] shrink-0 snap-center group flex flex-col rounded-3xl overflow-hidden border border-cyan-400/40 bg-black backdrop-blur-xl shadow-2xl"
             >
-              {/* Image Section */}
-              <div className="relative overflow-hidden h-44 bg-black shrink-0">
-                <div className="absolute top-3 left-3 z-10">
+              {/* Image Section - Clickable */}
+              <div className="relative overflow-hidden h-40 bg-black shrink-0">
+                <div className="absolute top-2.5 left-2.5 z-10">
                   <span
                     className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest backdrop-blur-md border text-white shadow-sm"
                     style={{
@@ -173,17 +173,38 @@ export const ProjectsSection = () => {
                     {project.category}
                   </span>
                 </div>
-                <div className="absolute top-3 right-3 z-10">
-                  <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-black/70 border border-white/20 text-white/80 backdrop-blur-md">
+                <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5">
+                  <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-black/80 border border-white/20 text-white/80 backdrop-blur-md">
                     0{project.id} / 04
                   </span>
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold text-emerald-300 bg-emerald-950/90 border border-emerald-500/60 backdrop-blur-md shadow-md active:scale-95"
+                    aria-label={`Open live deployment for ${project.title}`}
+                  >
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+                    </span>
+                    <span>Live</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
                 </div>
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover object-center"
-                />
+                <a
+                  href={project.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full h-full"
+                >
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    loading="lazy"
+                    className="w-full h-full object-cover object-center"
+                  />
+                </a>
                 <div
                   className="absolute bottom-0 left-0 right-0 h-[2px] opacity-80"
                   style={{ background: `linear-gradient(90deg, transparent, ${project.accent}, transparent)` }}
@@ -191,18 +212,26 @@ export const ProjectsSection = () => {
               </div>
 
               {/* Content Section */}
-              <div className="flex flex-col flex-1 p-5 gap-3 bg-black justify-between">
+              <div className="flex flex-col flex-1 p-4 gap-2.5 bg-black justify-between">
                 <div>
-                  <h3 className="text-lg font-extrabold text-foreground tracking-tight mb-1 leading-snug">
-                    {project.title}
-                  </h3>
-                  <p className="text-muted-foreground text-xs leading-relaxed line-clamp-3">
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 hover:text-primary transition-colors"
+                  >
+                    <h3 className="text-base font-extrabold text-foreground tracking-tight leading-snug">
+                      {project.title}
+                    </h3>
+                    <ExternalLink className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                  </a>
+                  <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2 mt-1">
                     {project.subtitle}
                   </p>
                 </div>
 
                 {/* Tech Tags */}
-                <div className="flex flex-wrap gap-1 pt-0.5">
+                <div className="flex flex-wrap gap-1">
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
@@ -226,11 +255,18 @@ export const ProjectsSection = () => {
                     href={project.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-md active:scale-95"
-                    style={{ background: project.accent }}
+                    className="flex-[1.4] inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-white transition-all shadow-md active:scale-95"
+                    style={{
+                      background: `linear-gradient(135deg, ${project.accent}, #06b6d4)`,
+                      boxShadow: `0 0 12px ${project.accent}55`,
+                    }}
                   >
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-80"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                    </span>
+                    <span>Live Deployment</span>
                     <ExternalLink className="w-3.5 h-3.5" />
-                    Live Demo
                   </a>
                   <a
                     href={project.github}
@@ -300,13 +336,13 @@ export const ProjectsSection = () => {
       }}
       className="relative bg-transparent hidden md:block"
     >
-      {/* Pinned viewport frame: pins while scrolling down through all 4 projects */}
-      <div className="sticky top-0 h-screen flex flex-col justify-start pt-14 md:pt-16 pb-4 overflow-hidden">
+      {/* Pinned viewport frame: centered vertically in the viewport so buttons are never clipped */}
+      <div className="sticky top-0 h-screen flex flex-col justify-center py-6 overflow-hidden">
         
         {/* Section Header */}
-        <div className="max-w-7xl mx-auto px-6 w-full mb-4 shrink-0 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div className="max-w-7xl mx-auto px-6 w-full mb-3 shrink-0 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-wider uppercase mb-1.5 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-wider uppercase mb-1 shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
               <span>Interactive Horizontal Flow</span>
             </div>
@@ -314,7 +350,7 @@ export const ProjectsSection = () => {
               Selected <span className="text-gradient-primary">Projects</span>
             </h2>
             <p className="text-muted-foreground text-xs sm:text-sm mt-0.5 max-w-xl">
-              Scroll down to slide across all 4 projects from left to right in one line. Continuing down moves directly into My Journey.
+              Scroll down to slide across all 4 projects with live deployments and code repositories.
             </p>
           </div>
 
@@ -342,12 +378,12 @@ export const ProjectsSection = () => {
             {projects.map((project) => (
               <div
                 key={project.id}
-                className="w-[85vw] max-w-[390px] sm:w-[390px] md:w-[430px] lg:w-[450px] shrink-0 group flex flex-col rounded-3xl overflow-hidden border border-cyan-400/40 bg-black backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-cyan-300 hover:shadow-[0_0_35px_rgba(6,182,212,0.35)]"
+                className="w-[85vw] max-w-[380px] sm:w-[380px] md:w-[410px] lg:w-[430px] shrink-0 group flex flex-col rounded-3xl overflow-hidden border border-cyan-400/40 bg-black backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-cyan-300 hover:shadow-[0_0_35px_rgba(6,182,212,0.35)]"
               >
-                {/* ── Image Section ── */}
-                <div className="relative overflow-hidden h-48 md:h-56 bg-black shrink-0">
+                {/* ── Image Section with Clickable Live Deployment Overlay ── */}
+                <div className="relative overflow-hidden h-40 md:h-44 bg-black shrink-0 group/img">
                   {/* Category badge */}
-                  <div className="absolute top-3.5 left-3.5 z-10">
+                  <div className="absolute top-2.5 left-2.5 z-10">
                     <span
                       className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest backdrop-blur-md border text-white shadow-sm"
                       style={{
@@ -359,46 +395,82 @@ export const ProjectsSection = () => {
                     </span>
                   </div>
 
-                  {/* Project Number */}
-                  <div className="absolute top-3.5 right-3.5 z-10">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-black/70 border border-white/20 text-white/80 backdrop-blur-md">
+                  {/* Top Right: Number + Quick Live Deployment Pill */}
+                  <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5">
+                    <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-black/80 border border-white/20 text-white/80 backdrop-blur-md">
                       0{project.id} / 04
                     </span>
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide text-emerald-300 bg-emerald-950/90 border border-emerald-500/60 backdrop-blur-md hover:bg-emerald-500 hover:text-black transition-all shadow-[0_0_10px_rgba(16,185,129,0.4)] hover:scale-105 z-20 group/live"
+                      title="Open Live Deployment"
+                    >
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+                      </span>
+                      <span>Live</span>
+                      <ExternalLink className="w-2.5 h-2.5 group-hover/live:translate-x-0.5 group-hover/live:-translate-y-0.5 transition-transform" />
+                    </a>
                   </div>
 
-                  {/* Screenshot Image */}
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105 transform-gpu"
-                  />
+                  {/* Clickable Image to Live App */}
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full h-full relative"
+                  >
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105 transform-gpu"
+                    />
+                    {/* Hover launch overlay */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center z-10 backdrop-blur-[2px]">
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-white bg-white/20 border border-white/40 backdrop-blur-md shadow-lg transform translate-y-2 group-hover/img:translate-y-0 transition-transform">
+                        <span>Launch Live App</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </a>
 
                   {/* Neon bottom glow line */}
                   <div
-                    className="absolute bottom-0 left-0 right-0 h-[2px] opacity-80"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] opacity-80 pointer-events-none"
                     style={{ background: `linear-gradient(90deg, transparent, ${project.accent}, transparent)` }}
                   />
                 </div>
 
                 {/* ── Content Section ── */}
-                <div className="flex flex-col flex-1 p-6 md:p-7 gap-3.5 bg-black justify-between">
+                <div className="flex flex-col flex-1 p-4 md:p-5 gap-2.5 bg-black justify-between">
                   <div>
-                    <h3 className="text-xl md:text-2xl font-extrabold text-foreground tracking-tight mb-1.5 leading-snug group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-muted-foreground text-xs md:text-sm leading-relaxed line-clamp-3">
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/title inline-flex items-center gap-1.5 hover:text-primary transition-colors"
+                    >
+                      <h3 className="text-lg md:text-xl font-extrabold text-foreground tracking-tight leading-snug">
+                        {project.title}
+                      </h3>
+                      <ExternalLink className="w-4 h-4 text-muted-foreground opacity-60 group-hover/title:opacity-100 group-hover/title:text-primary transition-all shrink-0" />
+                    </a>
+                    <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2 mt-1">
                       {project.subtitle}
                     </p>
                   </div>
 
                   {/* Tech Tags */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-1.5">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold border"
+                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold border"
                         style={{
                           background: project.accentLight,
                           borderColor: `${project.accent}44`,
@@ -411,28 +483,35 @@ export const ProjectsSection = () => {
                   </div>
 
                   {/* Divider */}
-                  <div className="h-px bg-border/40 mt-1" />
+                  <div className="h-px bg-border/40 my-0.5" />
 
                   {/* Action Buttons */}
-                  <div className="flex items-center gap-2.5 pt-1">
+                  <div className="flex items-center gap-2 pt-0.5 mt-auto">
                     <a
                       href={project.live}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-white transition-all duration-200 hover:brightness-110 active:scale-95 shadow-md"
-                      style={{ background: project.accent }}
+                      className="flex-[1.3] inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-white transition-all duration-200 hover:brightness-110 active:scale-95 shadow-md group/btn"
+                      style={{
+                        background: `linear-gradient(135deg, ${project.accent}, #06b6d4)`,
+                        boxShadow: `0 0 14px ${project.accent}55`,
+                      }}
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      Live Demo
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-80"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                      </span>
+                      <span>Live Deployment</span>
+                      <ExternalLink className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                     </a>
                     <a
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold border border-foreground/15 text-foreground hover:bg-foreground/5 transition-all duration-200 active:scale-95"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border border-foreground/20 text-foreground hover:bg-foreground/10 transition-all duration-200 active:scale-95"
                     >
                       <Github className="w-3.5 h-3.5" />
-                      GitHub
+                      <span>GitHub</span>
                     </a>
                   </div>
                 </div>

@@ -15,7 +15,7 @@ export interface TimelineEvent {
   year: string;
   title: string;
   subtitle?: string;
-  description: string;
+  description: string | React.ReactNode;
   icon?: React.ReactNode;
   color?: string;
 }
@@ -367,9 +367,9 @@ export const ScrollTimeline = ({
                             {event.subtitle}
                           </p>
                         )}
-                        <p className="text-muted-foreground transition-colors duration-200 dark:group-hover:text-cyan-100">
+                        <div className="text-muted-foreground transition-colors duration-200 dark:group-hover:text-cyan-100">
                           {event.description}
-                        </p>
+                        </div>
                       </CardContent>
                     </Card>
                   </motion.div>
