@@ -13,14 +13,23 @@ export const CareerTimeline = () => {
     },
     {
       year: "2025 — Present",
-      title: "AI Project Streak: Mochi, GestureAI & VitaSense",
+      title: "AI Project Streak: Wonder, Mochi, GestureAI & VitaSense",
       subtitle: "Personal Projects",
       description: (
         <div>
           <p className="leading-relaxed">
-            Developed and deployed three major AI-powered projects: Mochi (an animated AI virtual companion with voice interaction and Claude AI), GestureAI/MotionMind (3D gesture control meets AI Q&A), and VitaSense (full-stack healthcare platform with Groq/Llama AI). Each project ships with live deployments and public GitHub repos.
+            Developed and deployed major AI-powered projects: Wonder (autonomous AI travel itinerary & smart budget planner), Mochi (an animated AI virtual companion with voice interaction and Claude AI), GestureAI/MotionMind (3D gesture control meets AI Q&A), and VitaSense (full-stack healthcare platform with Groq/Llama AI). Each project ships with live deployments and public GitHub repos.
           </p>
           <div className="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-border/30">
+            <a
+              href="https://trip1.onrender.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-amber-300 bg-amber-950/70 border border-amber-500/40 hover:bg-amber-600 hover:text-white transition-all shadow-sm"
+            >
+              <span>Wonder Live</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
             <a
               href="https://souradiproychowdhury-cpu.github.io/mochi/"
               target="_blank"

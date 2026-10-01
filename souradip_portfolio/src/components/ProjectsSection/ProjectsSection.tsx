@@ -76,6 +76,18 @@ export const ProjectsSection = () => {
   const projects = [
     {
       id: 1,
+      title: "Wonder: AI Travel & Itinerary Planner",
+      subtitle: "Autonomous AI travel companion for tailored itineraries, smart budget estimation, and curated hotel, flight & train recommendations.",
+      tags: ["React", "AI Agents", "Travel AI", "Smart Budgeting", "Tailwind CSS"],
+      category: "AI TRAVEL / AGENTIC",
+      live: "https://trip1.onrender.com/",
+      github: "https://github.com/souradiproychowdhury-cpu/trip1",
+      image: "/project-wonder.png",
+      accent: "#f59e0b",
+      accentLight: "rgba(245,158,11,0.15)",
+    },
+    {
+      id: 2,
       title: "Mochi: AI Virtual Companion",
       subtitle: "Voice-driven AI companion inside an animated cat interface — Claude AI, camera analysis, weather, news & more.",
       tags: ["HTML5", "CSS3", "JavaScript", "Node.js", "Claude API"],
@@ -87,7 +99,7 @@ export const ProjectsSection = () => {
       accentLight: "rgba(168,85,247,0.15)",
     },
     {
-      id: 2,
+      id: 3,
       title: "GestureAI: 3D Gesture Control",
       subtitle: "3D gesture control meets an intelligent Q&A engine powered by AI & Wikipedia.",
       tags: ["JavaScript", "Gesture Recognition", "AI/LLM APIs", "Wikipedia API"],
@@ -99,7 +111,7 @@ export const ProjectsSection = () => {
       accentLight: "rgba(34,211,238,0.15)",
     },
     {
-      id: 3,
+      id: 4,
       title: "VitaSense — Smart Healthcare Platform",
       subtitle: "Full-stack health platform with AI vitals analysis, medicine reminders, SOS & daily health signals.",
       tags: ["React", "Vite", "Node.js", "MongoDB", "Groq/Llama"],
@@ -111,7 +123,7 @@ export const ProjectsSection = () => {
       accentLight: "rgba(16,185,129,0.15)",
     },
     {
-      id: 4,
+      id: 5,
       title: "Chatify — Real-Time Messaging UI",
       subtitle: "Modern real-time messaging interface with image sharing, voice messages & emoji reactions.",
       tags: ["HTML5", "CSS3", "Vanilla JavaScript"],
@@ -138,7 +150,7 @@ export const ProjectsSection = () => {
             Selected <span className="text-gradient-primary">Projects</span>
           </h2>
           <p className="text-muted-foreground text-xs sm:text-sm mt-1">
-            Swipe left or tap arrows to explore all 4 live projects.
+            Swipe left or tap arrows to explore all {projects.length} live projects.
           </p>
         </div>
 
@@ -175,7 +187,7 @@ export const ProjectsSection = () => {
                 </div>
                 <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5">
                   <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-black/80 border border-white/20 text-white/80 backdrop-blur-md">
-                    0{project.id} / 04
+                    0{project.id} / 0{projects.length}
                   </span>
                   <a
                     href={project.live}
@@ -310,7 +322,7 @@ export const ProjectsSection = () => {
               <ChevronLeft className="w-4 h-4" />
             </button>
             <span className="text-xs font-mono font-bold text-muted-foreground">
-              0{activeMobileIdx + 1} / 04
+              0{activeMobileIdx + 1} / 0{projects.length}
             </span>
             <button
               onClick={() => scrollToProject(Math.min(projects.length - 1, activeMobileIdx + 1))}
@@ -350,14 +362,14 @@ export const ProjectsSection = () => {
               Selected <span className="text-gradient-primary">Projects</span>
             </h2>
             <p className="text-muted-foreground text-xs sm:text-sm mt-0.5 max-w-xl">
-              Scroll down to slide across all 4 projects with live deployments and code repositories.
+              Scroll down to slide across all {projects.length} projects with live deployments and code repositories.
             </p>
           </div>
 
           {/* Progress Indicator */}
           <div className="flex items-center gap-3 self-start sm:self-end">
             <span className="text-xs text-muted-foreground font-mono hidden md:inline-block">
-              Mochi → Chatify
+              Wonder → Chatify
             </span>
             <div className="w-36 md:w-44 h-2.5 rounded-full bg-neutral-900 border border-cyan-500/30 overflow-hidden relative shadow-[0_0_12px_rgba(6,182,212,0.25)]">
               <motion.div
@@ -398,7 +410,7 @@ export const ProjectsSection = () => {
                   {/* Top Right: Number + Quick Live Deployment Pill */}
                   <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5">
                     <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-black/80 border border-white/20 text-white/80 backdrop-blur-md">
-                      0{project.id} / 04
+                      0{project.id} / 0{projects.length}
                     </span>
                     <a
                       href={project.live}

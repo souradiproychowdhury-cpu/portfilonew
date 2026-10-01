@@ -40,7 +40,7 @@ export const EducationSection = () => {
         "Specializing in Artificial Intelligence, Full-Stack Web Development, and Interactive Computing",
         "Won internal college hackathon in 2025 — built working prototype under tight deadline",
         "Coursework: Data Structures & Algorithms, Web Technologies, AI/ML, OOP, DBMS, Software Engineering",
-        "Shipped 4 production-grade projects during studies: Mochi, GestureAI, VitaSense, Chatify"
+        "Shipped 5 production-grade projects during studies: Wonder, Mochi, GestureAI, VitaSense, Chatify"
       ]
     },
     {
