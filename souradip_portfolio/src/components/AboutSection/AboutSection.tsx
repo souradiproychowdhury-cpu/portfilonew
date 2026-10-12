@@ -29,10 +29,10 @@ const ScrollRevealParagraph = ({
 };
 
 const stats = [
-  { icon: <Code2 className="w-6 h-6" />, label: "Projects Shipped", value: "4+" },
+  { icon: <Code2 className="w-6 h-6" />, label: "Projects Shipped", value: "5+" },
   { icon: <Trophy className="w-6 h-6" />, label: "Hackathon Won", value: "2025" },
-  { icon: <Globe2 className="w-6 h-6" />, label: "Live Deployments", value: "4" },
-  { icon: <Zap className="w-6 h-6" />, label: "AI Projects Built", value: "3+" },
+  { icon: <Globe2 className="w-6 h-6" />, label: "Live Deployments", value: "6" },
+  { icon: <Zap className="w-6 h-6" />, label: "AI Projects Built", value: "5+" },
   {
     icon: <Award className="w-6 h-6" />,
     label: "Course Completed",

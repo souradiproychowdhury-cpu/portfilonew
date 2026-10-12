@@ -13,14 +13,23 @@ export const CareerTimeline = () => {
     },
     {
       year: "2025 — Present",
-      title: "AI Project Streak: Wonder, Mochi, GestureAI & VitaSense",
+      title: "AI Project Streak: Questora, Wonder, Mochi, GestureAI & VitaSense",
       subtitle: "Personal Projects",
       description: (
         <div>
           <p className="leading-relaxed">
-            Developed and deployed major AI-powered projects: Wonder (autonomous AI travel itinerary & smart budget planner), Mochi (an animated AI virtual companion with voice interaction and Claude AI), GestureAI/MotionMind (3D gesture control meets AI Q&A), and VitaSense (full-stack healthcare platform with Groq/Llama AI). Each project ships with live deployments and public GitHub repos.
+            Developed and deployed major AI-powered projects: Questora (modular AI research engine with Google Search Grounding & Gemini/GPT-4 reasoning), Wonder (autonomous AI travel itinerary & smart budget planner), Mochi (an animated AI virtual companion with voice interaction and Claude AI), GestureAI/MotionMind (3D gesture control meets AI Q&A), and VitaSense (full-stack healthcare platform with Groq/Llama AI). Each project ships with live deployments and public GitHub repos.
           </p>
           <div className="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-border/30">
+            <a
+              href="https://questora-1-5c9s.onrender.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold text-cyan-300 bg-cyan-950/70 border border-cyan-500/40 hover:bg-cyan-600 hover:text-white transition-all shadow-sm"
+            >
+              <span>Questora Live</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
             <a
               href="https://trip1.onrender.com/"
               target="_blank"

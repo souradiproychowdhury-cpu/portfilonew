@@ -6,7 +6,8 @@ export const ProjectsSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const mobileTrackRef = useRef<HTMLDivElement>(null);
-  const [scrollDistance, setScrollDistance] = useState(800);
+  const [scrollDistance, setScrollDistance] = useState(1600);
+  const [totalVerticalTravel, setTotalVerticalTravel] = useState(2600);
   const [isMobile, setIsMobile] = useState(false);
   const [activeMobileIdx, setActiveMobileIdx] = useState(0);
 
@@ -30,13 +31,16 @@ export const ProjectsSection = () => {
         const windowWidth = window.innerWidth;
         if (lastCard) {
           const cardRightEdge = lastCard.offsetLeft + lastCard.offsetWidth;
-          const rightMargin = 48;
-          const dist = Math.max(0, cardRightEdge + rightMargin - windowWidth);
+          // Generous margin to center the last card comfortably on screen
+          const endMargin = Math.max(96, (windowWidth - lastCard.offsetWidth) / 2);
+          const dist = Math.max(0, cardRightEdge + endMargin - windowWidth);
           setScrollDistance(dist);
+          setTotalVerticalTravel(Math.max(dist * 1.35 + 600, 2600));
         } else {
           const trackWidth = track.scrollWidth;
-          const dist = Math.max(0, trackWidth - windowWidth + 48);
+          const dist = Math.max(0, trackWidth - windowWidth + 120);
           setScrollDistance(dist);
+          setTotalVerticalTravel(Math.max(dist * 1.35 + 600, 2600));
         }
       }
     };
@@ -44,10 +48,21 @@ export const ProjectsSection = () => {
     updateDistance();
     const timer1 = setTimeout(updateDistance, 100);
     const timer2 = setTimeout(updateDistance, 400);
+    const timer3 = setTimeout(updateDistance, 1000);
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateDistance();
+    });
+    if (trackRef.current) {
+      resizeObserver.observe(trackRef.current);
+    }
+
     window.addEventListener("resize", updateDistance);
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
+      clearTimeout(timer3);
+      resizeObserver.disconnect();
       window.removeEventListener("resize", updateDistance);
     };
   }, [isMobile]);
@@ -58,7 +73,12 @@ export const ProjectsSection = () => {
     offset: ["start start", "end end"],
   });
 
-  const x = useTransform(scrollYProgress, [0, 1], [0, -scrollDistance]);
+  // Cards slide horizontally from 0 to 0.82 progress.
+  // From 0.82 to 1.0, the cards pause at their final position (dwell time for Chatify),
+  // and only after 1.0 does the container unpin and transition down to Career section.
+  const x = useTransform(scrollYProgress, [0, 0.82, 1], [0, -scrollDistance, -scrollDistance]);
+
+  const desktopProgress = useTransform(scrollYProgress, [0, 0.82], [0, 1], { clamp: true });
 
   const scrollToProject = (idx: number) => {
     if (!mobileTrackRef.current) return;
@@ -76,6 +96,18 @@ export const ProjectsSection = () => {
   const projects = [
     {
       id: 1,
+      title: "Questora: Multi-Model AI Research Platform",
+      subtitle: "Modular AI research & synthesis engine with Google Search Grounding, Gemini & OpenAI reasoning, code sandboxes & dynamic slide decks.",
+      tags: ["Gemini AI", "OpenAI GPT-4", "Search Grounding", "Node.js", "AI Sandboxes"],
+      category: "MULTI-MODEL AI / RESEARCH",
+      live: "https://questora-1-5c9s.onrender.com/",
+      github: "https://github.com/souradiproychowdhury-cpu/Questora-",
+      image: "/project-questora.png",
+      accent: "#06b6d4",
+      accentLight: "rgba(6,182,212,0.15)",
+    },
+    {
+      id: 2,
       title: "Wonder: AI Travel & Itinerary Planner",
       subtitle: "Autonomous AI travel companion for tailored itineraries, smart budget estimation, and curated hotel, flight & train recommendations.",
       tags: ["React", "AI Agents", "Travel AI", "Smart Budgeting", "Tailwind CSS"],
@@ -87,7 +119,7 @@ export const ProjectsSection = () => {
       accentLight: "rgba(245,158,11,0.15)",
     },
     {
-      id: 2,
+      id: 3,
       title: "Mochi: AI Virtual Companion",
       subtitle: "Voice-driven AI companion inside an animated cat interface — Claude AI, camera analysis, weather, news & more.",
       tags: ["HTML5", "CSS3", "JavaScript", "Node.js", "Claude API"],
@@ -99,7 +131,7 @@ export const ProjectsSection = () => {
       accentLight: "rgba(168,85,247,0.15)",
     },
     {
-      id: 3,
+      id: 4,
       title: "GestureAI: 3D Gesture Control",
       subtitle: "3D gesture control meets an intelligent Q&A engine powered by AI & Wikipedia.",
       tags: ["JavaScript", "Gesture Recognition", "AI/LLM APIs", "Wikipedia API"],
@@ -111,7 +143,7 @@ export const ProjectsSection = () => {
       accentLight: "rgba(34,211,238,0.15)",
     },
     {
-      id: 4,
+      id: 5,
       title: "VitaSense — Smart Healthcare Platform",
       subtitle: "Full-stack health platform with AI vitals analysis, medicine reminders, SOS & daily health signals.",
       tags: ["React", "Vite", "Node.js", "MongoDB", "Groq/Llama"],
@@ -123,7 +155,7 @@ export const ProjectsSection = () => {
       accentLight: "rgba(16,185,129,0.15)",
     },
     {
-      id: 5,
+      id: 6,
       title: "Chatify — Real-Time Messaging UI",
       subtitle: "Modern real-time messaging interface with image sharing, voice messages & emoji reactions.",
       tags: ["HTML5", "CSS3", "Vanilla JavaScript"],
@@ -344,7 +376,7 @@ export const ProjectsSection = () => {
       id="projects"
       ref={containerRef}
       style={{
-        height: `calc(100vh + ${scrollDistance}px)`,
+        height: `calc(100vh + ${totalVerticalTravel}px)`,
       }}
       className="relative bg-transparent hidden md:block"
     >
@@ -366,16 +398,41 @@ export const ProjectsSection = () => {
             </p>
           </div>
 
-          {/* Progress Indicator */}
+          {/* Progress Indicator and Quick Navigation */}
           <div className="flex items-center gap-3 self-start sm:self-end">
             <span className="text-xs text-muted-foreground font-mono hidden md:inline-block">
-              Wonder → Chatify
+              Questora → Chatify
             </span>
             <div className="w-36 md:w-44 h-2.5 rounded-full bg-neutral-900 border border-cyan-500/30 overflow-hidden relative shadow-[0_0_12px_rgba(6,182,212,0.25)]">
               <motion.div
-                style={{ scaleX: scrollYProgress }}
+                style={{ scaleX: desktopProgress }}
                 className="h-full w-full bg-gradient-to-r from-cyan-400 via-primary to-purple-500 origin-left"
               />
+            </div>
+            {/* Desktop Navigation Chevrons */}
+            <div className="flex items-center gap-1 ml-1">
+              <button
+                onClick={() => {
+                  const step = totalVerticalTravel / (projects.length - 1);
+                  window.scrollBy({ top: -step, behavior: "smooth" });
+                }}
+                className="w-7 h-7 rounded-full border border-border/70 flex items-center justify-center text-foreground hover:bg-foreground/10 hover:border-cyan-400/60 active:scale-95 transition-all shadow-sm"
+                aria-label="Previous project"
+                title="Previous project"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => {
+                  const step = totalVerticalTravel / (projects.length - 1);
+                  window.scrollBy({ top: step, behavior: "smooth" });
+                }}
+                className="w-7 h-7 rounded-full border border-border/70 flex items-center justify-center text-foreground hover:bg-foreground/10 hover:border-cyan-400/60 active:scale-95 transition-all shadow-sm"
+                aria-label="Next project"
+                title="Next project"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
         </div>

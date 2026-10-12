@@ -76,7 +76,7 @@ function App() {
   ];
 
   return (
-    <div className="bg-transparent min-h-screen relative overflow-x-hidden selection:bg-primary/30 selection:text-primary-foreground">
+    <div className="bg-transparent min-h-screen relative overflow-x-clip selection:bg-primary/30 selection:text-primary-foreground">
       <CyberGridBackground />
 
 
